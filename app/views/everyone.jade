@@ -5,20 +5,24 @@ html
     link(rel='stylesheet', href='/css/style.css')
     script(src='/js/socket.io.min.js')
     script(src='/js/jquery-1.9.1.min.js')
-    script(src='/js/index.js')
+    script(src='/js/everyone.js')
     title SSNoC Chatroom
   body
-    h1 SSNoC Chatroom
-    div
+    h1 Everyone
+    div.row-centered
       div.inlineBlock
-        span Your name:
-          input(type="text", value="Anonymous")#name
-        br
         form#messageForm
-          textarea(rows="4", cols="50", placeholder="Share something!", maxlength=200)#outgoingMessage
-          input(type="button", value="Share", disabled=true)#send
+          textarea(rows="4", cols="50", placeholder="Text something!", maxlength=200)#outgoingMessage
+          br
+          input(type="button", value="Send", disabled=true)#send
       div.inlineBlock.topAligned
-        b Participants
+        b People
         br
         div#participants
-    div#messages
+      br
+      br
+      br
+      <a href="/people">View People</a>
+    br
+    br
+    div#messages.row-centered
