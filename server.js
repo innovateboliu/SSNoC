@@ -1,12 +1,18 @@
-var express = require("express")
-  , app = express()
-  , http = require("http").createServer(app)
-  , io = require("socket.io").listen(http)
-  , _ = require("underscore")
-  , MongoStore = require('connect-mongo')(express);
+var express = require("express"),
+  app = express(),
+  http = require("http").createServer(app),
+  io = require("socket.io").listen(http),
+  _ = require("underscore"),
+  mongoose = require('mongoose'),
+  passport = require('passport'),
+  flash = require('connect-flash'),
+  MongoStore = require('connect-mongo')(express);
 
 var participants = []
 
+var configDb = require('./config/database');
+
+mongoose.connect(configDb.url);
 
 app.set("ipaddr", "0.0.0.0");
 
