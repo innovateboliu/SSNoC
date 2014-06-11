@@ -1,50 +1,63 @@
-module.exports = function(app, _, io) {
+var User = require('./models/User');
+module.exports = function(app, _, io, participants, passport) {
   app.get("/", function(req, res) {
-    if (req.session.userId) {
-      console.log('req.session.userid ' + req.session.userId);
-      res.writeHead(301, {
-        'Location':'/people'
-      });
-      res.end();
+    if (req.isAuthenticated()) {
+      res.redirect('/people');
     } else { 
       res.render("join");
     }
   });
 
-  app.get("/everyone", function(req, res) {
-    if (req.session.userId) {
-      res.render("everyone");
-    } else {
-      res.redirect(301, '/');
-    }
+  app.get('/signup', function(req, res) {
+    res.render('signup');
+  });
+
+  app.get("/everyone", isLoggedIn, function(req, res) {
+    res.render("everyone");
   });
 
 
-  app.get("/private", function(req, res) {
-    if (req.session.userId) {
-      res.render("private", {userId:req.query.peer});
-    } else {
-      res.redirect(301, '/');
-    }
+  app.get("/private", isLoggedIn, function(req, res) {
+    res.render("private", {userId:req.query.peer});
   });
 
-  app.get("/people", function(req, res) {
-    if (req.session.userId) {
-      res.render("people", {userId: req.session.userId});
-    } else {
-      res.redirect(301, '/');
-    }
+  app.get("/people", isLoggedIn, function(req, res) {
+    res.render("people", {userId: req.session.userId});
   });
 
-  app.post("/join", function(req, res) {
-    var name = req.body.name;
-    req.session.userId = name;
-    //res.redirect(301, '/everyone');
-    res.json(200);
+
+  app.get("/logout", function(req, res) {
+    req.logout();
+    res.redirect('/');
+  });
+
+  app.post("/login", passport.authenticate('local-login', {
+    successRedirect : '/people',
+    failureRedirect : '/',
+    failureFlash: true
+  }));
+  app.post("/signup", function(req, res, next) { 
+    passport.authenticate('local-signup', function(err, user, info) {
+      if (err) 
+        return next(err);
+      if (!user) 
+        return res.redirect('/signup');
+      req.logIn(user, function(err) {
+        if (err) 
+          return next(err);
+        participants.all.push(user.local.name);
+        return res.redirect('/');
+      });
+    })(req, res, next);
   });
 
   app.get("/userId", function(req, res) {
-    res.json(200, {userId:req.session.userId});
+    var userId = req.session.passport.user;
+    User.findById(userId, function(err, user) {
+      if (user !== null) {
+        res.json(200, {userId:user.local.name});
+      }
+    });
   });
 
 
@@ -98,3 +111,9 @@ module.exports = function(app, _, io) {
   });
 };
 
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated())
+    return next();
+
+  res.redirect('/');
+}

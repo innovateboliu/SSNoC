@@ -14,18 +14,15 @@ html
     title SSNoC Chatroom
   body
     div.container
-      h1 SSNoC 
-          br
-          br
-      div.row.row-centered.col-sm-6.col-sm-offset-3
-        div.join
-          form(action='/login', method='post')
+      h1 
+        span.fa.fa-sign-in Signup
+      div.row.row-centered
+        div.signup
+          form(action='/signup', method='post')
             div.form-group
-              input.name(type="text" class='format-control' name='name')
+              input.name(type='text' class='form-control' name='name')
             div.form-group
-              input.password(type="password" class='format-control' name='password')
-            button(type="submit", class='btn btn-warning btn-lg')#join Login 
-        br
-
-        p Need an account? 
-          <a href='/signup'>Signup</a>
+              input.password(type="password" class="form-control" name="password")
+            button(type="submit" class="btn btn-warning btn-lg") Signup
+        p Go back to login? 
+          <a href='/'>Login</a>

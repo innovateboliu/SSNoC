@@ -10,8 +10,9 @@ function init() {
       location.href="http://54.183.85.61:7777/";
     });
   }
-  $('#join').on('click', join);
-  $("#name").Watermark("Name");
+  //$('#join').on('click', join);
+  $(".name").Watermark("Name");
+  $(".password").Watermark("Password");
 }
 
 $(document).on('ready', init);

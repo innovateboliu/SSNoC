@@ -15,12 +15,6 @@ textarea {
 .topAligned {
     vertical-align: top;
 }
-#name {
-  width: 100px;
-}
-#join {
-  width: 100px;
-} 
 
 h1 {
   text-align:center;
