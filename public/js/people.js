@@ -73,7 +73,7 @@ function init() {
   });
 
 
-  $("#participants").on("click",".clickable", function() {
+  $("#participants_online").on("click",".clickable", function() {
       location.href="/private?peer="+$(this).attr('userId'); 
   });
 }

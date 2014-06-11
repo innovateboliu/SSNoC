@@ -89,11 +89,11 @@ module.exports = function(app, _, io, participants, passport) {
     var name = request.body.name;
     var peer = request.body.peer;
 
-    var peer_candidates = _.filter(participants, function(person){
+    var peer_candidates = _.filter(participants.online, function(person){
       return person.name === peer;
     });
 
-    var sender_candidates = _.filter(participants, function(person){
+    var sender_candidates = _.filter(participants.online, function(person){
       return person.name === name;
     });
 
