@@ -7,7 +7,7 @@ function init() {
   var sessionId = '';
 
   var userId = '';
-
+/*
   function updateParticipants(participants) {
     $('#participants').html('');
     var map = {}
@@ -22,7 +22,28 @@ function init() {
         name + ' ' + (map[name] === sessionId ? '(You)' : '') + '<br /></span>');
     }
   }
+*/
+  function updateParticipants(participants) {
+    $('#participants_online').html('');
+    $('#participants_offline').html('');
+    map = {}
+    for (var sId in participants.online){
+      userName = participants.online[sId];
+      if (map[userName] == undefined || map[userName] !== sessionId){
+        map[userName] = sId;
+      }
+    }
+    for (var name in map) {
+      $('#participants_online').append('<span class="name" id="' + map[name] + '" userId="' + name + '">' +
+        name + ' ' + (map[name] === sessionId ? '(Me)' : '<input type="button" class="clickable" value="chat"' + 'userid="' + name + '">') + '<br /></span>');
+    }
 
+    participants.all.forEach(function(name) {
+      if (map[name] == undefined) {
+        $('#participants_offline').append('<span class="name"  userId="' + name + '">' + name + '<br /></span>');
+      }
+    });
+  }
   socket.on('connect', function () {
     sessionId = socket.socket.sessionid;
     $.ajax({
