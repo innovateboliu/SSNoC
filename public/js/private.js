@@ -8,6 +8,7 @@ function init() {
 
   var userId = '';
   var peer = $("#peer").text();
+  var groupId = '';
 
   function updateParticipants(participants) {
     $('#participants').html('');
@@ -33,6 +34,7 @@ function init() {
     }).done(function(data) {
       userId = data.userId;
       socket.emit('newUser', {id: sessionId, name: userId});
+      retrieveChatsRecord();
     });
   });
 
@@ -64,7 +66,7 @@ function init() {
       url:  '/private_message',
       type: 'POST',
       dataType: 'json',
-      data: {message: outgoingMessage, name: userId, peer:peer}
+      data: {message: outgoingMessage, name: userId, peer:peer, groupId:groupId}
     });
   }
 
@@ -89,6 +91,19 @@ function init() {
     socket.emit('nameChange', {id: sessionId, name: name});
   }
 
+  function retrieveChatsRecord() {
+    $.ajax({
+      url: '/enter_private_chat',
+      type: 'POST',
+      dataType: 'json',
+      data: {peer1:userId, peer2:peer}
+    }).done(function(group){
+      groupId = group.groupId;
+      group.chats.forEach(function(chat) {
+        $('#messages').prepend('<b>' + chat.sender + '</b><br />' + chat.content+ '<hr />');
+      });
+    });
+  }
   $('#outgoingMessage').on('keydown', outgoingMessageKeyDown);
   $('#outgoingMessage').on('keyup', outgoingMessageKeyUp);
   $('#name').on('focusout', nameFocusOut);

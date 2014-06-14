@@ -19,7 +19,7 @@ module.exports = function(app, _, io, participants, passport) {
 
 
   app.get("/private", isLoggedIn, function(req, res) {
-    res.render("private", {userId:req.query.peer});
+    res.render("private", {peer:req.query.peer});
   });
 
   app.get("/people", isLoggedIn, function(req, res) {
@@ -84,28 +84,33 @@ module.exports = function(app, _, io, participants, passport) {
     console.log(peer1);
     var peer2 = req.body.peer2;
     User.findOne({'local.name' : peer1}, function(err, user1) {
-      if (err) 
+      if (err) { 
         console.log("1");
         res.json(500, err);
+      }
 
-      if (!user1) 
+      if (!user1) {
         console.log("2");
         res.json(500, 'user not existing');
+      }
 
       User.findOne({'local.name' : peer2}, function(err, user2) {
         //var inter = _.intersection(user1.groups, user2.groups);
         var inter = user1.groups.filter(function(group) {
           return user2.groups.indexOf(group) != -1;
         });
-        console.log('group1 is ' + user1.groups);
-        console.log('group2 is ' + user2.groups);
-        console.log('intersection is ' + inter);
         var groupId;
         if (inter.length > 0) {
           groupId = inter[0];
           console.log('groupId is ' + groupId);
           Group.findOne({_id : groupId}, function(err, group) {
-            res.json(200, group.chats);
+            if (err) {
+              res.json(500, err);
+              console.log('error is '+ err);
+            }
+
+            console.log('chats history is '+ JSON.stringify(group.chats));
+            res.json(200, {"chats" : group.chats, "groupId" : groupId});
           });
         } else {
           var newGroup = new Group();
@@ -144,27 +149,60 @@ module.exports = function(app, _, io, participants, passport) {
       return response.json(400, {error: "Message is invalid"});
     }
 
+    var groupId = request.body.groupId;
     var name = request.body.name;
     var peer = request.body.peer;
 
+    /*
     var peer_candidates = _.filter(participants.online, function(person){
       return person.name === peer;
     });
+    */
+    var peer_candidates = [];
+    var onlineUsers = participants.online;
+    for (sid in onlineUsers) {
+      if (onlineUsers[sid] === peer)
+        peer_candidates.push(sid);
+    }
 
+    /*
     var sender_candidates = _.filter(participants.online, function(person){
       return person.name === name;
     });
-
-    for (var i = 0; i <  peer_candidates.length; i++) { 
-      var p = peer_candidates[i];
-      io.sockets.socket(p.id).emit("incomingMessage", {message: message, name: name});
+    */
+    var sender_candidates = [];
+    for (sid in onlineUsers) {
+      if (onlineUsers[sid] === name)
+        sender_candidates.push(sid);
     }
 
-    for (var i = 0; i <  sender_candidates.length; i++) { 
-      var p = sender_candidates[i];
-      io.sockets.socket(p.id).emit("incomingMessage", {message: message, name: name});
-    }
-    response.json(200, {message: "Message received"});
+    Group.findOne({"_id" : groupId}, function(err, group) {
+      if (err) {
+        console.log("Error when querying group in private chat: " + err);
+        return;
+      }
+      if (!group) {
+        console.log("Group not found when querying group in private chat: ");
+        return;
+      }
+      group.chats.push({"sender":name, "content":message});
+      group.save(function(err) {
+        if (err) {
+          console.log("Error when saving group in private chat: " + err);
+          return;
+        }
+        for (var i = 0; i <  peer_candidates.length; i++) { 
+          var sid = peer_candidates[i];
+          io.sockets.socket(sid).emit("incomingMessage", {message: message, name: name});
+        }
+
+        for (var i = 0; i <  sender_candidates.length; i++) { 
+          var sid = sender_candidates[i];
+          io.sockets.socket(sid).emit("incomingMessage", {message: message, name: name});
+        }
+        response.json(200, {message: "Message received"});
+      });
+    });
 
   });
 };
