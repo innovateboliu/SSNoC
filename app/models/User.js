@@ -5,7 +5,8 @@ var userSchema = mongoose.Schema({
   local : {
     name : String, 
     password : String
-  }
+  },
+  groups : [{type: mongoose.Schema.Types.ObjectId, ref : 'Group'}]
 });
 
 userSchema.methods.generateHash = function(password) {

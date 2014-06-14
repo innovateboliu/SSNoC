@@ -1,4 +1,5 @@
 var User = require('./models/User');
+var Group = require('./models/Group');
 module.exports = function(app, _, io, participants, passport) {
   app.get("/", function(req, res) {
     if (req.isAuthenticated()) {
@@ -77,6 +78,63 @@ module.exports = function(app, _, io, participants, passport) {
 
   });
 
+  app.post("/enter_private_chat", function(req, res) {
+    console.log("0");
+    var peer1 = req.body.peer1;
+    console.log(peer1);
+    var peer2 = req.body.peer2;
+    User.findOne({'local.name' : peer1}, function(err, user1) {
+      if (err) 
+        console.log("1");
+        res.json(500, err);
+
+      if (!user1) 
+        console.log("2");
+        res.json(500, 'user not existing');
+
+      User.findOne({'local.name' : peer2}, function(err, user2) {
+        //var inter = _.intersection(user1.groups, user2.groups);
+        var inter = user1.groups.filter(function(group) {
+          return user2.groups.indexOf(group) != -1;
+        });
+        console.log('group1 is ' + user1.groups);
+        console.log('group2 is ' + user2.groups);
+        console.log('intersection is ' + inter);
+        var groupId;
+        if (inter.length > 0) {
+          groupId = inter[0];
+          console.log('groupId is ' + groupId);
+          Group.findOne({_id : groupId}, function(err, group) {
+            res.json(200, group.chats);
+          });
+        } else {
+          var newGroup = new Group();
+          newGroup.participants.push(user1._id);
+          newGroup.participants.push(user2._id);
+          newGroup.save(function(err) {
+            if (err)
+              res.json(500, err);
+
+            user1.groups.push(newGroup._id);
+            user1.save(function(err) {
+              if (err)
+                res.json(500, err);
+
+              user2.groups.push(newGroup._id);
+              user2.save(function(err) {
+                if (err)
+                  res.json(500, err);
+
+                res.json(200, newGroup.chats);
+              });
+            });
+          });
+        }
+        
+      });
+    });
+    
+  });
 
   app.post("/private_message", function(request, response) {
 
