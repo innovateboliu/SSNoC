@@ -26,6 +26,37 @@ module.exports = function(app, _, io, participants, passport) {
     res.render("people", {userId: req.session.userId});
   });
 
+  app.get("/all_chats", isLoggedIn, function(req, res) {
+    res.render("all_chats");
+  });
+
+  app.post("/all_chats", function(req, res) { 
+    var name = req.body.name;
+    Group.find({}, function(err, groups) {
+      if (err)
+        res.send(500, err);
+      
+      var groupInfos = [];
+
+      groups.map(function(group) {
+        User.findOne({"_id":group.participants[0]}, function(err, user1) {
+          if (err)
+            res.send(500, err);
+          if (!user1)
+            res.send(500, "user not found");
+          User.findOne({"_id":group.participants[1]}, function(err, user2) {
+            if (err)
+              res.send(500, err);
+            if (!user2)
+              res.send(500, "user not found");
+            
+            groupInfos.push({"_id": group._id, "participants":[user1.local.name, user2.local.name]});
+          });
+        });
+      }); 
+      res.json(200, groupInfos);
+    });
+  });
 
   app.get("/logout", function(req, res) {
     req.logout();
