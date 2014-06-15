@@ -34,36 +34,42 @@ module.exports = function(app, _, io, participants, passport) {
     var user1Id = req.body.userId;
     User.findOne({"_id":user1Id}, function(err, user1) {
       if (err)
-        res.send(500, err);
+        return res.send(500, err);
       if (!user1)
-        res.send(500, "user1 not found");
-      console.log("user1 is " + user1.local.name);
+        return res.send(500, "user1 not found");
+      console.log("user1 is " + user1.local.name + ", " + user1Id);
 
       var groups = user1.groups;
       var groupInfos = [];
+      var cnt = 0;
       groups.forEach(function(groupId){
         Group.findOne({"_id":groupId}, function(err, group) {
           if (err)
-            res.send(500, err);
+            return res.send(500, err);
 
           var user2Id;
-          if (group.participants[0] === user1Id)
-            user2Id = group.participants[1]
+
+          if (group.participants[0].equals(user1Id))
+            user2Id = group.participants[1];
           else
-            user2Id = group.participants[0]
+            user2Id = group.participants[0];
+          console.log("user2Id is " + user2Id);
           User.findOne({"_id":user2Id}, function(err, user2) {
             if (err)
-              res.send(500, err);
+              return res.send(500, err);
             if (!user2)
-              res.send(500, "user2 not found");
+              return res.send(500, "user2 not found");
             
             console.log("user2 is " + user2.local.name);
             groupInfos.push({"groupId": group._id, "peer":[user2.local.name]});
+            cnt++;
+            if (cnt == groups.length){
+              console.log("groupInfos are " + JSON.stringify(groupInfos));
+              res.json(200, groupInfos);
+            }
           });
         });
       });
-      console.log("groupInfos are " + JSON.stringify(groupInfos));
-      res.json(200, groupInfos);
     });
   });
 

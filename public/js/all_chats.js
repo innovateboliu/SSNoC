@@ -35,6 +35,7 @@ function init() {
       console.log(groupInfos.length);
       groupInfos.forEach(function(groupInfo) {
         console.log(groupInfo.groupId + ", " +groupInfo.peer);
+        $('#all_chats').append('<li class="list-group-item" groupId="' + groupInfo.groupId + '" peerName="'+groupInfo.peer + '">' + '<a href="/private?peer='+groupInfo.peer+'"><i class="icon-chevron-right"></i>' + groupInfo.peer + '</a></list>'); 
       });
     });
   }
