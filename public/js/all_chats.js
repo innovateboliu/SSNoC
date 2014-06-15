@@ -9,11 +9,11 @@ function init() {
   socket.on('connect', function () {
     sessionId = socket.socket.sessionid;
     $.ajax({
-      url:  '/userId',
+      url:  '/user',
       type: 'GET',
       dataType: 'json'
     }).done(function(data) {
-      name = data.userId;
+      name = data.name;
       socket.emit('newUser', {id: sessionId, name: name});
       retrieveGroups();
     });

@@ -6,7 +6,7 @@ function init() {
 
   var sessionId = '';
 
-  var userId = '';
+  var name = '';
   var peer = $("#peer").text();
   var groupId = '';
 
@@ -28,12 +28,12 @@ function init() {
   socket.on('connect', function () {
     sessionId = socket.socket.sessionid;
     $.ajax({
-      url:  '/userId',
+      url:  '/user',
       type: 'GET',
       dataType: 'json'
     }).done(function(data) {
-      userId = data.userId;
-      socket.emit('newUser', {id: sessionId, name: userId});
+      name = data.name;
+      socket.emit('newUser', {id: sessionId, name: name});
       retrieveChatsRecord();
     });
   });
@@ -66,7 +66,7 @@ function init() {
       url:  '/private_message',
       type: 'POST',
       dataType: 'json',
-      data: {message: outgoingMessage, name: userId, peer:peer, groupId:groupId}
+      data: {message: outgoingMessage, name: name, peer:peer, groupId:groupId}
     });
   }
 
@@ -96,7 +96,7 @@ function init() {
       url: '/enter_private_chat',
       type: 'POST',
       dataType: 'json',
-      data: {peer1:userId, peer2:peer}
+      data: {peer1:name, peer2:peer}
     }).done(function(group){
       groupId = group.groupId;
       group.chats.forEach(function(chat) {

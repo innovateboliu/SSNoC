@@ -83,11 +83,11 @@ module.exports = function(app, _, io, participants, passport) {
     })(req, res, next);
   });
 
-  app.get("/userId", function(req, res) {
+  app.get("/user", function(req, res) {
     var userId = req.session.passport.user;
     User.findById(userId, function(err, user) {
       if (user !== null) {
-        res.json(200, {userId:user.local.name});
+        res.json(200, {name:user.local.name, userId:userId});
       }
     });
   });

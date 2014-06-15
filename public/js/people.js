@@ -30,12 +30,12 @@ function init() {
   socket.on('connect', function () {
     sessionId = socket.socket.sessionid;
     $.ajax({
-      url:  '/userId',
+      url:  '/user',
       type: 'GET',
       dataType: 'json'
     }).done(function(data) {
-      var userId = data.userId;
-      socket.emit('newUser', {id: sessionId, name: userId});
+      var name = data.name;
+      socket.emit('newUser', {id: sessionId, name: name});
     });
 
   });

@@ -6,7 +6,7 @@ function init() {
 
   var sessionId = '';
 
-  var userId = '';
+  var name = '';
 /*
   function updateParticipants(participants) {
     $('#participants').html('');
@@ -47,12 +47,12 @@ function init() {
   socket.on('connect', function () {
     sessionId = socket.socket.sessionid;
     $.ajax({
-      url:  '/userId',
+      url:  '/user',
       type: 'GET',
       dataType: 'json'
     }).done(function(data) {
-      userId = data.userId;
-      socket.emit('newUser', {id: sessionId, name: userId});
+      name = data.name;
+      socket.emit('newUser', {id: sessionId, name: name});
     });
   });
 
@@ -84,7 +84,7 @@ function init() {
       url:  '/message',
       type: 'POST',
       dataType: 'json',
-      data: {message: outgoingMessage, name: userId}
+      data: {message: outgoingMessage, name: name}
     });
   }
 
