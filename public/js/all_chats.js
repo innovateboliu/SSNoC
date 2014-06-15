@@ -4,6 +4,7 @@ function init() {
   var socket = io.connect(serverBaseUrl);
 
   var name;
+  var userId;
   var sessionId;
 
   socket.on('connect', function () {
@@ -14,6 +15,7 @@ function init() {
       dataType: 'json'
     }).done(function(data) {
       name = data.name;
+      userId = data.userId;
       socket.emit('newUser', {id: sessionId, name: name});
       retrieveGroups();
     });
@@ -28,9 +30,12 @@ function init() {
       url : '/all_chats',
       type: 'POST',
       dataType: 'json',
-      data: {name : name}
-    }).done(function(data){
-      console.log(data);
+      data: {userId: userId}
+    }).done(function(groupInfos){
+      console.log(groupInfos.length);
+      groupInfos.forEach(function(groupInfo) {
+        console.log(groupInfo.groupId + ", " +groupInfo.peer);
+      });
     });
   }
 }
