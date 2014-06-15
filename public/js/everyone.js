@@ -53,6 +53,7 @@ function init() {
     }).done(function(data) {
       name = data.name;
       socket.emit('newUser', {id: sessionId, name: name});
+      retrievePublicWall();
     });
   });
 
@@ -109,6 +110,19 @@ function init() {
     socket.emit('nameChange', {id: sessionId, name: name});
   }
 
+  function retrievePublicWall() {
+    $.ajax({
+      url: '/public_wall_records',
+      type: 'GET'
+    }).done(function(chats){
+      chats.forEach(function(chat) {
+        $('#messages').prepend('<b>' + chat.sender + '</b><br />' + chat.content+ '<hr />');
+      });
+      $('#outgoingMessage').attr('disabled', false);
+    });
+  }
+
+  $('#outgoingMessage').attr('disabled', true);
   $('#outgoingMessage').on('keydown', outgoingMessageKeyDown);
   $('#outgoingMessage').on('keyup', outgoingMessageKeyUp);
   $('#name').on('focusout', nameFocusOut);

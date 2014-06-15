@@ -38,17 +38,7 @@ function init() {
     });
   });
 
-  socket.on('newConnection', function (data) {
-//    updateParticipants(data.participants);
-  });
 
-  socket.on('userDisconnected', function(data) {
-  //  updateParticipants(data.participants);
-  });
-
-  socket.on('nameChanged', function (data) {
-    $('#' + data.id).html(data.name + ' ' + (data.id === sessionId ? '(You)' : '') + '<br />');
-  });
 
   socket.on('incomingMessage', function (data) {
     var message = data.message;
@@ -102,8 +92,10 @@ function init() {
       group.chats.forEach(function(chat) {
         $('#messages').prepend('<b>' + chat.sender + '</b><br />' + chat.content+ '<hr />');
       });
+      $('#outgoingMessage').attr('disabled', false);
     });
   }
+  $('#outgoingMessage').attr('disabled', true);
   $('#outgoingMessage').on('keydown', outgoingMessageKeyDown);
   $('#outgoingMessage').on('keyup', outgoingMessageKeyUp);
   $('#name').on('focusout', nameFocusOut);

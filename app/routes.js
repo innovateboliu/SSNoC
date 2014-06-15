@@ -1,5 +1,7 @@
 var User = require('./models/User');
 var Group = require('./models/Group');
+var mongoose = require('mongoose');
+
 module.exports = function(app, _, io, participants, passport) {
   app.get("/", function(req, res) {
     if (req.isAuthenticated()) {
@@ -29,7 +31,6 @@ module.exports = function(app, _, io, participants, passport) {
   app.get("/all_chats", isLoggedIn, function(req, res) {
     res.render("all_chats");
   });
-
   app.post("/all_chats", function(req, res) { 
     var user1Id = req.body.userId;
     User.findOne({"_id":user1Id}, function(err, user1) {
@@ -70,6 +71,27 @@ module.exports = function(app, _, io, participants, passport) {
           });
         });
       });
+    });
+  });
+
+  app.get("/public_wall_records", function(req, res) { 
+    Group.findOne({"_id":mongoose.Types.ObjectId("111111111111111111111111")}, function(err, group) {
+      if (err)
+        return res.send(500, err);
+      console.log("public wall is " + group);
+      if (!group || group == null) {
+        console.log("create new public wall is ");
+        var newGroup = new Group();
+        newGroup._id = mongoose.Types.ObjectId("111111111111111111111111");
+        newGroup.save(function(err) {
+          if (err)
+            return res.json(500, err);
+          return res.json(200, newGroup.chats);
+        });
+      } else {
+        console.log("public wall exists ");
+        return res.json(200, group.chats);
+      }
     });
   });
 
@@ -118,9 +140,27 @@ module.exports = function(app, _, io, participants, passport) {
 
     var name = request.body.name;
 
-    io.sockets.emit("incomingMessage", {message: message, name: name});
 
-    response.json(200, {message: "Message received"});
+    Group.findOne({"_id" : mongoose.Types.ObjectId("111111111111111111111111")}, function(err, group) {
+      if (err) {
+        console.log("Error when querying group in private chat: " + err);
+        return response.send(500, err);
+      }
+      if (!group) {
+        console.log("Group not found when querying group in private chat: ");
+        return response.send(500, "Public wall not found");
+      }
+      group.chats.push({"sender":name, "content":message});
+      group.save(function(err) {
+        if (err) {
+          console.log("Error when saving group in private chat: " + err);
+          return response.send(500, err);
+        }
+        io.sockets.emit("incomingMessage", {message: message, name: name});
+
+        response.json(200, {message: "Message received"});
+      });
+    });
 
   });
 
@@ -132,15 +172,22 @@ module.exports = function(app, _, io, participants, passport) {
     User.findOne({'local.name' : peer1}, function(err, user1) {
       if (err) { 
         console.log("1");
-        res.json(500, err);
+        return res.json(500, err);
       }
 
       if (!user1) {
         console.log("2");
-        res.json(500, 'user not existing');
+        return res.json(500, 'user not existing');
       }
 
       User.findOne({'local.name' : peer2}, function(err, user2) {
+        if (err) { 
+          return res.json(500, err);
+        }
+
+        if (!user2) {
+          return res.json(500, 'user not existing');
+        }
         //var inter = _.intersection(user1.groups, user2.groups);
         var inter = user1.groups.filter(function(group) {
           return user2.groups.indexOf(group) != -1;
@@ -151,32 +198,37 @@ module.exports = function(app, _, io, participants, passport) {
           console.log('groupId is ' + groupId);
           Group.findOne({_id : groupId}, function(err, group) {
             if (err) {
-              res.json(500, err);
+              return res.json(500, err);
               console.log('error is '+ err);
             }
 
             console.log('chats history is '+ JSON.stringify(group.chats));
-            res.json(200, {"chats" : group.chats, "groupId" : groupId});
+            return res.json(200, {"chats" : group.chats, "groupId" : groupId});
           });
         } else {
+          console.log('creating new group');
           var newGroup = new Group();
           newGroup.participants.push(user1._id);
           newGroup.participants.push(user2._id);
           newGroup.save(function(err) {
+            console.log('saving new group');
             if (err)
-              res.json(500, err);
+              return res.json(500, err);
 
             user1.groups.push(newGroup._id);
             user1.save(function(err) {
+              console.log('saving user1');
               if (err)
-                res.json(500, err);
+                return res.json(500, err);
 
               user2.groups.push(newGroup._id);
               user2.save(function(err) {
+                console.log('saving user2');
                 if (err)
-                  res.json(500, err);
+                  return res.json(500, err);
 
-                res.json(200, newGroup.chats);
+                console.log('newGroup chats are ' + newGroup.chats);
+                return res.json(200, {"chats" : newGroup.chats, "groupId":newGroup._id});
               });
             });
           });
