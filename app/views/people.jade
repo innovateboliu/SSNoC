@@ -1,6 +1,9 @@
 doctype html
 html
   head
+    <meta charset="utf-8">
+    <!-- Set the viewport so this responsive site displays correctly on mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans')
     link(rel='stylesheet', href='/css/style.css')
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
@@ -12,37 +15,36 @@ html
     title SSNoC People
 
   body
-    ul.nav.nav-pills.nav-justified
-      li
-        <a href="/people">People</a>
-      li
-        <a href="/everyone">Public Wall</a>
-      li
-        <a href="/all_chats">All Chats</a>
-      li
-        <a href="/logout">Logout</a>
-    br
-    br
-    br
-    h1 People
-    br
-    br
-    br
-    <div class="row-centered">
-    <input type="search" class="search form-control" placeholder="Search people" id="searchBox">
-    </div>
-    //input (type="search", class="search form-control", placeholder="search") #searchBox
-    div.row-centered
-      div.inlineBlock.topAligned
+    div.container
+      ul.nav.nav-pills.nav-justified.navbar-default.navbar-fixed-bottom
+        li
+          <a href="/people">People</a>
+        li
+          <a href="/everyone">Public Wall</a>
+        li
+          <a href="/all_chats">All Chats</a>
+        li
+          <a href="/logout">Logout</a>
+      br
+      br
+      br
+      h1.text-center People
+      br
+      br
+      br
+      div.text-center.col-sm-6.col-sm-offset-3
+        <input type="search" class="search form-control" placeholder="Search people" id="searchBox">
+      div.text-center
+        div.inlineBlock.topAligned
+          br
+          h3 Online
+          div#participants_online 
+          hr
+          h3 Offline
+          div#participants_offline 
         br
-        h3 Online
-        div#participants_online 
-        hr
-        h3 Offline
-        div#participants_offline 
-      br
-      br
-      br
-      br
-      br
-      br
+        br
+        br
+        br
+        br
+        br

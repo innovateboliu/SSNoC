@@ -14,9 +14,11 @@ html
     title SSNoC Chatroom
   body
     div.container
-      h1 
+      h1.text-center 
         span.fa.fa-sign-in Signup
-      div.row.row-centered
+      br
+      br
+      div.row.text-center.col-sm-6.col-sm-offset-3
         div.signup
           form(action='/signup', method='post')
             div.form-group
@@ -24,5 +26,6 @@ html
             div.form-group
               input.password(type="password" class="form-control" name="password")
             button(type="submit" class="btn btn-warning btn-lg") Signup
+        br
         p Go back to login? 
           <a href='/'>Login</a>
