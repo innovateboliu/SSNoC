@@ -1,39 +1,9 @@
 doctype html
 html
-  head
-    <meta charset="utf-8">
-    <!-- Set the viewport so this responsive site displays correctly on mobile devices -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    script(src='/js/socket.io.min.js')
-    script(src='/js/jquery-1.9.1.min.js')
-    link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans')
-    <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.css">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-    link(rel='stylesheet', href='/css/style.css')
-    script(src='/js/everyone.js')
-    title SSNoC Chatroom
+  include includes/head.jade
+  script(src='/js/everyone.js')
   body
-    nav.navbar.navbar-default.nav-pills.nav-justified.navbar-fixed-top(role="navigation")
-      div.navbar-header
-        button(class="btn btn-sucess navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse")
-          //span.glyphicon.glyphicon-chevron-down
-          span.icon-bar
-          span.icon-bar
-          span.icon-bar
-      div.navbar-collapse.collapse
-        //ul.nav.nav-pills.nav-justified.navbar-default.navbar-fixed-bottom
-        ul.nav.navbar-nav
-          li.nav
-            <a href="/people">People</a>
-          li.nav
-            <a href="/everyone">Public Wall</a>
-          li.nav
-            <a href="/all_chats">All Chats</a>
-          li.nav
-            <a href="/logout">Logout</a>
-    br
-    br
-    br
+    include includes/navbar.jade
     h1.text-center Public Wall
     div.text-center
       div.inlineBlock

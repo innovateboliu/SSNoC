@@ -1,31 +1,10 @@
 doctype html
 html
-  head
-    <meta charset="utf-8">
-    <!-- Set the viewport so this responsive site displays correctly on mobile devices -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans')
-    link(rel='stylesheet', href='/css/style.css')
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-    script(src='/js/socket.io.min.js')
-    script(src='/js/jquery-1.9.1.min.js')
-    script(src='/js/all_chats.js')
-    script(src='/js/jquery.watermarkinput.js')
-    title SSNoC Chatroom
+  include includes/head.jade
+  script(src='/js/all_chats.js')
+  script(src='/js/jquery.watermarkinput.js')
   body
-    ul.nav.nav-pills.nav-justified.navbar-default.navbar-fixed-bottom
-      li
-        <a href="/people">People</a>
-      li
-        <a href="/everyone">Public Wall</a>
-      li
-        <a href="/all_chats">All Chats</a>
-      li
-        <a href="/logout">Logout</a>
-    br
-    br
-    br
+    include includes/navbar.jade
     h1.text-center All Chats
     br
     br

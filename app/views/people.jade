@@ -1,50 +1,27 @@
 doctype html
 html
-  head
-    <meta charset="utf-8">
-    <!-- Set the viewport so this responsive site displays correctly on mobile devices -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans')
-    link(rel='stylesheet', href='/css/style.css')
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-    script(src='/js/socket.io.min.js')
-    script(src='/js/jquery-1.9.1.min.js')
-    script(src='/js/jquery.cookie.js')
-    script(src='/js/people.js')
-    title SSNoC People
-
+  include includes/head.jade
+  script(src='/js/jquery.cookie.js')
+  script(src='/js/people.js')
   body
-    div.container
-      ul.nav.nav-pills.nav-justified.navbar-default.navbar-fixed-bottom
-        li
-          <a href="/people">People</a>
-        li
-          <a href="/everyone">Public Wall</a>
-        li
-          <a href="/all_chats">All Chats</a>
-        li
-          <a href="/logout">Logout</a>
+    include includes/navbar.jade
+    h1.text-center People
+    br
+    br
+    br
+    div.text-center.col-sm-6.col-sm-offset-3
+      <input type="search" class="search form-control" placeholder="Search people" id="searchBox">
+    div.text-center
+      div.inlineBlock.topAligned
+        br
+        h3 Online
+        div#participants_online 
+        hr
+        h3 Offline
+        div#participants_offline 
       br
       br
       br
-      h1.text-center People
       br
       br
       br
-      div.text-center.col-sm-6.col-sm-offset-3
-        <input type="search" class="search form-control" placeholder="Search people" id="searchBox">
-      div.text-center
-        div.inlineBlock.topAligned
-          br
-          h3 Online
-          div#participants_online 
-          hr
-          h3 Offline
-          div#participants_offline 
-        br
-        br
-        br
-        br
-        br
-        br
