@@ -5,14 +5,9 @@ body {
   padding-bottom:50px;
 }
 #top-navbar{
-  height:50px;
-}
-#bottom-navbar {
-  height:34px;
-  padding:0;
-  
+  min-height:50px;
 }
 .nav > li >a{
-  height:50px;
+  height:60px;
   padding-top:15px;
 }
