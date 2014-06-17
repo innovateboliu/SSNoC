@@ -72,7 +72,8 @@ function init() {
   socket.on('incomingMessage', function (data) {
     var message = data.message;
     var name = data.name;
-    $('#messages').prepend('<b>' + name + '</b><br />' + message + '<hr />');
+    appendNewMsg({sender: name, content:message});
+    $(document).scrollTop($(document).height());
   });
 
   socket.on('error', function (reason) {
@@ -116,17 +117,24 @@ function init() {
       type: 'GET'
     }).done(function(chats){
       chats.forEach(function(chat) {
-        $('#messages').prepend('<b>' + chat.sender + '</b><br />' + chat.content+ '<hr />');
+        appendNewMsg(chat);
       });
       $('#outgoingMessage').attr('disabled', false);
+      $(document).scrollTop($(document).height());
     });
   }
 
+  function appendNewMsg(chat) {
+    var pos = (chat.sender === name ? "text-right" : "text-left");
+    $('#messages').append('<p class="' + pos + ' text-info">' + chat.sender + '</p><p class="' + pos + '">' + chat.content + '</p>' + '<hr />');
+  }
+
   $('#outgoingMessage').attr('disabled', true);
-  $('#outgoingMessage').on('keydown', outgoingMessageKeyDown);
-  $('#outgoingMessage').on('keyup', outgoingMessageKeyUp);
   $('#name').on('focusout', nameFocusOut);
-  $('#send').on('click', sendMessage);
+  $('#send').on('click', function() {
+    sendMessage();
+    $('#outgoingMessage').val('');
+  });
 
 }
 

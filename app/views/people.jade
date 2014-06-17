@@ -5,23 +5,18 @@ html
   script(src='/js/people.js')
   body
     include includes/navbar.jade
-    h1.text-center People
-    br
-    br
-    br
-    div.text-center.col-sm-6.col-sm-offset-3
-      <input type="search" class="search form-control" placeholder="Search people" id="searchBox">
-    div.text-center
-      div.inlineBlock.topAligned
-        br
-        h3 Online
-        div#participants_online 
-        hr
-        h3 Offline
-        div#participants_offline 
+    div.container
       br
       br
       br
+      div.text-center.col-sm-6.col-sm-offset-3
+        <input type="search" class="search form-control" placeholder="Search people" id="searchBox">
       br
-      br
-      br
+      div.text-center
+        div.inlineBlock.topAligned
+          br
+          h3 Online
+          div#participants_online 
+          hr
+          h3 Offline
+          div#participants_offline 

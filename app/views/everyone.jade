@@ -4,22 +4,9 @@ html
   script(src='/js/everyone.js')
   body
     include includes/navbar.jade
-    h1.text-center Public Wall
-    div.text-center
-      div.inlineBlock
-        form#messageForm
-          textarea(rows="4", cols="50", placeholder="Text something!", maxlength=200)#outgoingMessage
-          br
-          input(type="button", value="Send", disabled=true)#send
-      div.inlineBlock.topAligned
-        b Online
-        div#participants_online 
-        hr
-        b Offline
-        div#participants_offline 
+    div.container.main-body
       br
       br
       br
-    br
-    br
-    div#messages.text-center
+      div#messages
+    include includes/message_send_box.jade

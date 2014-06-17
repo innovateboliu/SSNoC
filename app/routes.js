@@ -16,20 +16,20 @@ module.exports = function(app, _, io, participants, passport) {
   });
 
   app.get("/everyone", isLoggedIn, function(req, res) {
-    res.render("everyone");
+    res.render("everyone", {title:"Public Wall"});
   });
 
 
   app.get("/private", isLoggedIn, function(req, res) {
-    res.render("private", {peer:req.query.peer});
+    res.render("private", {peer:req.query.peer, title:"Chat with " + req.query.peer});
   });
 
   app.get("/people", isLoggedIn, function(req, res) {
-    res.render("people", {userId: req.session.userId});
+    res.render("people", {userId: req.session.userId, title:"People"});
   });
 
   app.get("/all_chats", isLoggedIn, function(req, res) {
-    res.render("all_chats");
+    res.render("all_chats", {title:"All Chats"});
   });
   app.post("/all_chats", function(req, res) { 
     var user1Id = req.body.userId;
