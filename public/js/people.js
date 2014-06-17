@@ -17,7 +17,7 @@ function init() {
     }
     for (var name in map) {
       $('#participants_online').append('<span class="name" id="' + map[name] + '" userId="' + name + '">' +
-        name + ' ' + (map[name] === sessionId ? '(Me)' : '<input type="button" class="clickable" value="chat"' + 'userid="' + name + '">') + '<br /></span>');
+        name + ' ' + (map[name] === sessionId ? '(Me)' : '<button type="button" class="clickable btn btn-default dropdown-toggle" data-toggle="dropdown" value="chat" userid="' + name + '"><span class="caret"></span>') + '</span><br/>');
     }
 
     participants.all.forEach(function(name) {
