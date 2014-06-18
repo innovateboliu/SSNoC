@@ -72,7 +72,8 @@ function init() {
   socket.on('incomingMessage', function (data) {
     var message = data.message;
     var name = data.name;
-    appendNewMsg({sender: name, content:message});
+    var ts = data.ts;
+    appendNewMsg({sender: name, content:message, ts:ts});
     $(document).scrollTop($(document).height());
   });
 
@@ -126,7 +127,7 @@ function init() {
 
   function appendNewMsg(chat) {
     var pos = (chat.sender === name ? "text-right" : "text-left");
-    $('#messages').append('<p class="' + pos + ' text-info">' + chat.sender + '</p><p class="' + pos + '">' + chat.content + '</p>' + '<hr />');
+    $('#messages').append('<p class="' + pos + ' text-info">' + chat.sender + '</p><p class="' + pos + '">' + chat.content + '</p><p class="'+ pos +'"><small class="text-muted">' + chat.ts +'</small></p>' + '<hr />');
   }
 
   $('#outgoingMessage').attr('disabled', true);

@@ -1,0 +1,14 @@
+doctype html
+html
+  include includes/head.jade
+  script(src='/js/jquery.cookie.js')
+  script(src='/js/profile.js')
+  body
+    include includes/navbar.jade
+    div.container
+      br
+      br
+      br
+      div.btn-group.btn-group-justified
+        div.btn-group
+          button.btn.btn-default(peer=peer)#chat Chat

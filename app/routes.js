@@ -28,6 +28,10 @@ module.exports = function(app, _, io, participants, passport) {
     res.render("people", {userId: req.session.userId, title:"People"});
   });
 
+  app.get("/profile", isLoggedIn, function(req, res) {
+    res.render("profile", {peer: req.query.peer, title:req.query.peer});
+  });
+
   app.get("/all_chats", isLoggedIn, function(req, res) {
     res.render("all_chats", {title:"All Chats"});
   });
@@ -150,13 +154,14 @@ module.exports = function(app, _, io, participants, passport) {
         console.log("Group not found when querying group in private chat: ");
         return response.send(500, "Public wall not found");
       }
-      group.chats.push({"sender":name, "content":message});
+      console.log("ts is " + (new Date()).getHours());
+      group.chats.push({"sender":name, "content":message, "ts":new Date().toLocaleString()});
       group.save(function(err) {
         if (err) {
           console.log("Error when saving group in private chat: " + err);
           return response.send(500, err);
         }
-        io.sockets.emit("incomingMessage", {message: message, name: name});
+        io.sockets.emit("incomingMessage", {message: message, name: name, ts:new Date().toLocaleString()});
 
         response.json(200, {message: "Message received"});
       });
@@ -283,7 +288,7 @@ module.exports = function(app, _, io, participants, passport) {
         console.log("Group not found when querying group in private chat: ");
         return;
       }
-      group.chats.push({"sender":name, "content":message});
+      group.chats.push({"sender":name, "content":message, ts:new Date().toLocaleString()});
       group.save(function(err) {
         if (err) {
           console.log("Error when saving group in private chat: " + err);
@@ -291,12 +296,12 @@ module.exports = function(app, _, io, participants, passport) {
         }
         for (var i = 0; i <  peer_candidates.length; i++) { 
           var sid = peer_candidates[i];
-          io.sockets.socket(sid).emit("incomingMessage", {message: message, name: name});
+          io.sockets.socket(sid).emit("incomingMessage", {message: message, name: name, ts:new Date().toLocaleString()});
         }
 
         for (var i = 0; i <  sender_candidates.length; i++) { 
           var sid = sender_candidates[i];
-          io.sockets.socket(sid).emit("incomingMessage", {message: message, name: name});
+          io.sockets.socket(sid).emit("incomingMessage", {message: message, name: name, ts:new Date().toLocaleString()});
         }
         response.json(200, {message: "Message received"});
       });

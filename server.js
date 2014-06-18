@@ -38,7 +38,7 @@ app.use(express.bodyParser());
 
 app.use(express.cookieParser());
 
-app.use(express.session({secret : 'boliuboliuboliu', cookie : {maxAge : 3600000 }}));
+app.use(express.session({secret : 'boliuboliuboliu', cookie : {maxAge : 3600000*24*10 }}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());

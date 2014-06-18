@@ -16,13 +16,16 @@ function init() {
       }
     }
     for (var name in map) {
-      $('#participants_online').append('<span class="name" id="' + map[name] + '" userId="' + name + '">' +
-        name + ' ' + (map[name] === sessionId ? '(Me)' : '<button type="button" class="clickable btn btn-default dropdown-toggle" data-toggle="dropdown" value="chat" userid="' + name + '"><span class="caret"></span>') + '</span><br/>');
+      var userEle = (map[name] === sessionId ? '<span class="name" id="' + map[name] + '" userId="' + name + '">' + name + '(Me)</spa><br/>' : '<div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" value="chat" userid="' + name + '">' + name + '  <span class="caret"></span></button><ul class="dropdown-menu" role="menu"><li><a href="#" class="clickable" userId="' + name +'">Chat</a></li></ul></div><br/>');
+      var userEle = (map[name] === sessionId ? '<span class="list-group-item" id="' + map[name] + '" userName="' + name + '">' + name + '(Me)</span>': '<a href="/profile?peer='+name+'" class="list-group-item" username="' + name + '">'+name+'</a>');
+      $('#participants_online').append(userEle);
     }
 
     participants.all.forEach(function(name) {
       if (map[name] == undefined) {
-        $('#participants_offline').append('<span class="name"  userId="' + name + '">' + name + '<br /></span>');
+        //var userEle = '<div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" value="chat" userid="' + name + '">' + name + '  <span class="caret"></span></button><ul class="dropdown-menu" role="menu"><li><a href="#" class="clickable" userId="' + name +'">Leave a message</a></li></ul></div><br/>';
+        var userEle = '<a href="/profile?peer='+name+'" class="list-group-item" username="' + name +'">'+name+'</a>';
+        $('#participants_offline').append(userEle);
       }
     });
   }
@@ -64,16 +67,19 @@ function init() {
 
   $("#searchBox").on("keyup click input", function(){
     if (this.value.length > 0) {
-      $(".name").show().filter(function() {
+      $(".userName").show().filter(function() {
         return $(this).text().toLowerCase().indexOf($("#searchBox").val().toLowerCase()) == -1;
       }).hide();      
     } else {
-      $(".name").show();
+      $(".userName").show();
     }
   });
 
 
   $("#participants_online").on("click",".clickable", function() {
+      location.href="/private?peer="+$(this).attr('userId'); 
+  });
+  $("#participants_offline").on("click",".clickable", function() {
       location.href="/private?peer="+$(this).attr('userId'); 
   });
 }
