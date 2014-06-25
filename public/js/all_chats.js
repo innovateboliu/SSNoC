@@ -33,10 +33,11 @@ function init() {
       dataType: 'json',
       data: {userId: userId}
     }).done(function(groupInfos){
+      var statuses = {ok: "I'm OK", emergency: 'Emergency', assistance: 'Need Assistance'};
       console.log(groupInfos.length);
       groupInfos.forEach(function(groupInfo) {
         console.log(groupInfo.groupId + ", " +groupInfo.peer);
-        $('#all_chats').append('<a class="list-group-item ' + groupInfo.peer.status + '" groupId="' + groupInfo.groupId + '" peerName="'+groupInfo.peer.userName + '" href="/private?peer='+groupInfo.peer.userName+'"><i class="icon-chevron-right"></i>' + groupInfo.peer.userName + '</a>'); 
+        $('#all_chats').append('<a class="list-group-item" groupId="' + groupInfo.groupId + '" peerName="'+groupInfo.peer.userName + '" href="/private?peer='+groupInfo.peer.userName+'"><i class="icon-chevron-right"></i>' + groupInfo.peer.userName + '      <span class="label label-default ' + groupInfo.peer.status+ '">' + statuses[groupInfo.peer.status] + '</span>  '+'</a>'); 
       });
     });
   }

@@ -10,15 +10,14 @@ html
       br
       br
       if myself
-        div.text-center
-          div.btn-group
-            button.btn.btn-default.dropdown-toggle(data-toggle="dropdown" type="button" class="#{status}") Change status  
-              span.caret
-            ul.dropdown-menu(role="menu")
-              each val, key in {ok: "I'm OK", emergency: 'Emergency', assistance: 'Need Assistance'}
-                if key != status
-                  li
-                    a(href="/status?#{key}") #{val}
+        span My status  
+        div.btn-group
+          button.btn.btn-default.dropdown-toggle.status_item(data-toggle="dropdown" type="button")
+            span.caret
+          ul.dropdown-menu(role="menu")
+            each val, key in {ok: "I'm OK", emergency: 'Emergency', assistance: 'Need Assistance'}
+              li.status_option(status=key)
+                a(href="#") #{val}
       else 
         div.btn-group.btn-group-justified
           div.btn-group

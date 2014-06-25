@@ -12,6 +12,7 @@ function init() {
     var userName = '';
     var status = '';
     var userEle = '';
+    var statuses = {ok: "I'm OK", emergency: 'Emergency', assistance: 'Need Assistance'};
     for (var sId in participants.online){
       userName = participants.online[sId].userName;
       status = participants.online[sId].status;
@@ -20,13 +21,13 @@ function init() {
       }
     }
     for (var name in map) {
-      userEle = (map[name].sId === sessionId ? '<a href="/profile?userName='+name+'&status='+map[name].status+'" class="list-group-item userName ' + map[name].status + '" id="' + map[name].sId + '" userName="' + name + '">' + name + ' (Me)</a>': '<a href="/profile?peer='+name+'" class="list-group-item userName ' + map[name].status + '">'+name+'</a>');
+      userEle = (map[name].sId === sessionId ? '<a href="/profile?userName='+name+'" class="list-group-item userName" id="' + map[name].sId + '" userName="' + name + '">' + name + ' (Me)      <span class="label label-default ' + map[name].status + '">' + statuses[map[name].status] + '</span>' + '</a>': '<a href="/profile?peer='+name+'" class="list-group-item userName">' + name + '      <span class="label label-default ' + map[name].status + '">' + statuses[map[name].status] + '</span>'+'</a>');
       $('#participants_online').append(userEle);
     }
 
     participants.all.forEach(function(userObj) {
       if (map[userObj.userName] == undefined) {
-        userEle = '<a href="/profile?peer='+userObj.userName+'" class="list-group-item userName offline ' + userObj.status + '">'+userObj.userName+'</a>';
+        userEle = '<a href="/profile?peer='+userObj.userName+'" class="list-group-item userName offline">' + userObj.userName+'      <span class="label label-default ' + userObj.status + '">' + statuses[userObj.status] + '</span>  '+'</a>';
         $('#participants_offline').append(userEle);
       }
     });

@@ -30,12 +30,26 @@ module.exports = function(app, _, io, participants, passport) {
 
   app.get("/profile", isLoggedIn, function(req, res) {
     if (req.query.userName !== undefined){
-      res.render("profile", {myself: true, status: req.query.status, title:req.query.userName});
+      res.render("profile", {myself: true, title:req.query.userName});
     } else {
       res.render("profile", {myself: false, peer: req.query.peer, title:req.query.peer});
     }
   });
 
+  app.put('/status', isLoggedIn, function(req, res) {
+    var user_name = req.body.user_name;
+    var new_status = req.body.new_status;
+    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ user_name is ' + user_name);
+    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ new_status is ' + new_status);
+    User.update({'local.name':user_name}, {$set: {'profile.status':new_status}}, {multi:false, upsert:false}, function(err, number_affected, raw) {
+      console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ ' + number_affected);
+      if (err){ 
+        console.log(err);
+        return res.send(501, err);
+      }
+      return res.send(200);
+    });
+  });
   app.get("/all_chats", isLoggedIn, function(req, res) {
     res.render("all_chats", {title:"All Chats"});
   });

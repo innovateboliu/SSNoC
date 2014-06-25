@@ -16,10 +16,10 @@ body {
 .ok, .emergency, .assistance {
   color: white !important;
 }
-
-.ok:hover, .emergency:hover, .assistance:hover, .pub_wall:hover {
-  color: black!important;
+.status_item.ok:hover, .status_item.emergency:hover, .status_item.assistance:hover {
+  color: black !important;
 }
+
 .ok {
   background: #5cb85c;
 }
@@ -31,17 +31,10 @@ body {
 }
 
 .offline {
-  opacity:0.7;
-}
-.pub_wall{
-  background: #5bc0de;
-  color: white !important;
+  opacity:0.4;
 }
 
-h3.offline {
-  color: lightgrey !important;
-}
-h3.online{
+h3{
   color: grey !important;
 }
               
