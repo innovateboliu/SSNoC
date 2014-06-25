@@ -282,7 +282,7 @@ module.exports = function(app, _, io, participants, passport) {
     var peer_candidates = [];
     var onlineUsers = participants.online;
     for (sid in onlineUsers) {
-      if (onlineUsers[sid] === peer)
+      if (onlineUsers[sid].userName === peer)
         peer_candidates.push(sid);
     }
 
@@ -293,7 +293,7 @@ module.exports = function(app, _, io, participants, passport) {
     */
     var sender_candidates = [];
     for (sid in onlineUsers) {
-      if (onlineUsers[sid] === name)
+      if (onlineUsers[sid].userName === name)
         sender_candidates.push(sid);
     }
 
