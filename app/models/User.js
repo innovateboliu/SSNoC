@@ -6,6 +6,9 @@ var userSchema = mongoose.Schema({
     name : String, 
     password : String
   },
+  profile : {
+    status : String
+  },
   groups : [{type: mongoose.Schema.Types.ObjectId, ref : 'Group'}]
 });
 

@@ -52,7 +52,8 @@ function init() {
       dataType: 'json'
     }).done(function(data) {
       name = data.name;
-      socket.emit('newUser', {id: sessionId, name: name});
+      var status = data.status;
+      socket.emit('newUser', {id: sessionId, name: name, status: status});
       retrievePublicWall();
     });
   });

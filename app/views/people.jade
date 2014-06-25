@@ -9,14 +9,17 @@ html
       br
       br
       br
-      div.text-center.col-sm-6.col-sm-offset-3
-        <input type="search" class="search form-control" placeholder="Search people" id="searchBox">
+      div
+        input.search.form-control(type="search" class="" placeholder="Search people")#searchBox
       br
-      div.text-center
-        div.inlineBlock.topAligned
-          br
-          h3 Online
+      br
+      div.row
+        div.col-md-6.col-xs-6
+          h3.text-center.online Online
           div#participants_online 
-          hr
-          h3 Offline
+        div.col-md-6.col-xs-6
+          h3.text-center.offline Offline
           div#participants_offline 
+    br
+    br
+    br

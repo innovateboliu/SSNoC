@@ -29,7 +29,11 @@ module.exports = function(app, _, io, participants, passport) {
   });
 
   app.get("/profile", isLoggedIn, function(req, res) {
-    res.render("profile", {peer: req.query.peer, title:req.query.peer});
+    if (req.query.userName !== undefined){
+      res.render("profile", {myself: true, status: req.query.status, title:req.query.userName});
+    } else {
+      res.render("profile", {myself: false, peer: req.query.peer, title:req.query.peer});
+    }
   });
 
   app.get("/all_chats", isLoggedIn, function(req, res) {
@@ -66,7 +70,7 @@ module.exports = function(app, _, io, participants, passport) {
               return res.send(500, "user2 not found");
             
             console.log("user2 is " + user2.local.name);
-            groupInfos.push({"groupId": group._id, "peer":[user2.local.name]});
+            groupInfos.push({"groupId": group._id, "peer":{userName:user2.local.name, status:user2.profile.status}});
             cnt++;
             if (cnt == groups.length){
               console.log("groupInfos are " + JSON.stringify(groupInfos));
@@ -118,7 +122,7 @@ module.exports = function(app, _, io, participants, passport) {
       req.logIn(user, function(err) {
         if (err) 
           return next(err);
-        participants.all.push(user.local.name);
+        participants.all.push({'userName' : user.local.name, 'status' :user.profile.status});
         return res.redirect('/');
       });
     })(req, res, next);
@@ -128,7 +132,7 @@ module.exports = function(app, _, io, participants, passport) {
     var userId = req.session.passport.user;
     User.findById(userId, function(err, user) {
       if (user !== null) {
-        res.json(200, {name:user.local.name, userId:userId});
+        res.json(200, {name:user.local.name, userId:userId, status:user.profile.status});
       }
     });
   });

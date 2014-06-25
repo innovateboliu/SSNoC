@@ -27,6 +27,7 @@ module.exports = function(passport) {
         } else {
           var newUser = new User();
           newUser.local.name = name;
+          newUser.profile.status = "ok";
           newUser.local.password = newUser.generateHash(password);
 
           newUser.save(function(err) {

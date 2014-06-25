@@ -61,8 +61,8 @@ app.use(express.session({
 
 User.find({}, function(err, users) {
   users.forEach(function(user) {
-    console.log("!!!!!!!!!!!" +  JSON.stringify(user.local));
-    participants.all.push(user.local.name);
+    console.log("!!!!!!!!!!!" +  JSON.stringify(user));
+    participants.all.push({'userName' : user.local.name, 'status' :user.profile.status});
     console.log("@@@@@@@@@@@@@@@@@@@" + JSON.stringify(participants));
   });
 

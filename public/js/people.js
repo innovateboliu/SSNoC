@@ -8,23 +8,25 @@ function init() {
   function updateParticipants(participants) {
     $('#participants_online').html('');
     $('#participants_offline').html('');
-    map = {}
+    var map = {};
+    var userName = '';
+    var status = '';
+    var userEle = '';
     for (var sId in participants.online){
-      userName = participants.online[sId];
+      userName = participants.online[sId].userName;
+      status = participants.online[sId].status;
       if (map[userName] == undefined || map[userName] !== sessionId){
-        map[userName] = sId;
+        map[userName] = {sId:sId, status:status};
       }
     }
     for (var name in map) {
-      var userEle = (map[name] === sessionId ? '<span class="name" id="' + map[name] + '" userId="' + name + '">' + name + '(Me)</spa><br/>' : '<div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" value="chat" userid="' + name + '">' + name + '  <span class="caret"></span></button><ul class="dropdown-menu" role="menu"><li><a href="#" class="clickable" userId="' + name +'">Chat</a></li></ul></div><br/>');
-      var userEle = (map[name] === sessionId ? '<span class="list-group-item" id="' + map[name] + '" userName="' + name + '">' + name + '(Me)</span>': '<a href="/profile?peer='+name+'" class="list-group-item" username="' + name + '">'+name+'</a>');
+      userEle = (map[name].sId === sessionId ? '<a href="/profile?userName='+name+'&status='+map[name].status+'" class="list-group-item userName ' + map[name].status + '" id="' + map[name].sId + '" userName="' + name + '">' + name + ' (Me)</a>': '<a href="/profile?peer='+name+'" class="list-group-item userName ' + map[name].status + '">'+name+'</a>');
       $('#participants_online').append(userEle);
     }
 
-    participants.all.forEach(function(name) {
-      if (map[name] == undefined) {
-        //var userEle = '<div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" value="chat" userid="' + name + '">' + name + '  <span class="caret"></span></button><ul class="dropdown-menu" role="menu"><li><a href="#" class="clickable" userId="' + name +'">Leave a message</a></li></ul></div><br/>';
-        var userEle = '<a href="/profile?peer='+name+'" class="list-group-item" username="' + name +'">'+name+'</a>';
+    participants.all.forEach(function(userObj) {
+      if (map[userObj.userName] == undefined) {
+        userEle = '<a href="/profile?peer='+userObj.userName+'" class="list-group-item userName offline ' + userObj.status + '">'+userObj.userName+'</a>';
         $('#participants_offline').append(userEle);
       }
     });
@@ -38,7 +40,8 @@ function init() {
       dataType: 'json'
     }).done(function(data) {
       var name = data.name;
-      socket.emit('newUser', {id: sessionId, name: name});
+      var status = data.status;
+      socket.emit('newUser', {id: sessionId, name: name, status: status});
     });
 
   });

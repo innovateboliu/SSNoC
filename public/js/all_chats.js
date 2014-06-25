@@ -16,7 +16,8 @@ function init() {
     }).done(function(data) {
       name = data.name;
       userId = data.userId;
-      socket.emit('newUser', {id: sessionId, name: name});
+      var status = data.status;
+      socket.emit('newUser', {id: sessionId, name: name, status: status});
       retrieveGroups();
     });
   });
@@ -35,7 +36,7 @@ function init() {
       console.log(groupInfos.length);
       groupInfos.forEach(function(groupInfo) {
         console.log(groupInfo.groupId + ", " +groupInfo.peer);
-        $('#all_chats').append('<li class="list-group-item" groupId="' + groupInfo.groupId + '" peerName="'+groupInfo.peer + '">' + '<a href="/private?peer='+groupInfo.peer+'"><i class="icon-chevron-right"></i>' + groupInfo.peer + '</a></list>'); 
+        $('#all_chats').append('<a class="list-group-item ' + groupInfo.peer.status + '" groupId="' + groupInfo.groupId + '" peerName="'+groupInfo.peer.userName + '" href="/private?peer='+groupInfo.peer.userName+'"><i class="icon-chevron-right"></i>' + groupInfo.peer.userName + '</a>'); 
       });
     });
   }

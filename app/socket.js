@@ -5,7 +5,7 @@ module.exports = function(_, io, participants) {
     console.log('in socket.js ' + JSON.stringify(participants));
     socket.on("newUser", function(data) {
       console.log('in newUser');
-      participants.online[data.id] = data.name;
+      participants.online[data.id] = {'userName' : data.name, 'status': data.status};
       console.log('participants are ' + JSON.stringify(participants));
       io.sockets.emit("newConnection", {participants: participants});
     });

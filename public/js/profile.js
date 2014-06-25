@@ -5,7 +5,6 @@ function init() {
 
   var sessionId = '';
 
-
   socket.on('connect', function () {
     sessionId = socket.socket.sessionid;
     $.ajax({
@@ -14,7 +13,8 @@ function init() {
       dataType: 'json'
     }).done(function(data) {
       var name = data.name;
-      socket.emit('newUser', {id: sessionId, name: name});
+      var status = data.status;
+      socket.emit('newUser', {id: sessionId, name: name, status: status});
     });
 
   });

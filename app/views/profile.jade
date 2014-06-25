@@ -9,6 +9,17 @@ html
       br
       br
       br
-      div.btn-group.btn-group-justified
-        div.btn-group
-          button.btn.btn-default(peer=peer)#chat Chat
+      if myself
+        div.text-center
+          div.btn-group
+            button.btn.btn-default.dropdown-toggle(data-toggle="dropdown" type="button" class="#{status}") Change status  
+              span.caret
+            ul.dropdown-menu(role="menu")
+              each val, key in {ok: "I'm OK", emergency: 'Emergency', assistance: 'Need Assistance'}
+                if key != status
+                  li
+                    a(href="/status?#{key}") #{val}
+      else 
+        div.btn-group.btn-group-justified
+          div.btn-group
+            button.btn.btn-default(peer=peer)#chat Chat
